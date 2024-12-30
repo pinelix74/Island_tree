@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Model Viewer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body { margin: 0; max-width: 1920px;}
+        canvas { display: block; }
+        .main{
+            width: 100vw;
+            position: relative;
+            text-align: right;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            /* height: 49vw; */
+        }
+        .dropbtn {
+            background-color: hsl(210, 4%, 10%);
+            color: white;
+            padding: 1vw;
+            font-size: 1vw;
+            border: none;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: 1s;
+            display: flex;
+            align-items: center;
+            gap: 2.5vw;
+            }
+
+            .dropbtn:hover, .dropbtn:focus {
+            background-color: #e2e9ed;
+            color: black;
+            }
+
+            .dropdown {
+            position: absolute;
+            display: inline-block;
+            right: 2vw;
+            bottom: 65%;
+            }
+
+            .dropdown-content {
+            position: absolute;
+            background-color: #f1f1f1;
+            width: 6vw;
+            overflow: auto;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            }
+
+            .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            }
+
+            .dropdown a:hover {background-color: #ddd;}
+            .downMenu{
+                font-size: xx-large;
+                color: green;
+            }
+            .show {display: block;}
+            li{cursor: pointer;}
+            .point-cursor{
+                position: absolute;
+                font-size: xx-large;
+                color: rgb(15, 61, 15);
+                pointer-events: none;
+            }
+            .brush-btn{
+                border-radius: 50%;
+                border: none;
+                font-size: xx-large;
+                position: absolute;
+                right: 2%;
+                bottom: 59%;
+                cursor: pointer;
+            }
+            .brush-btn :hover{
+                color: rgb(249, 1, 1);
+            }
+            .reply-btn{
+                border-radius: 50%;
+                border: none;
+                font-size: xx-large;
+                position: absolute;
+                right: 2%;
+                bottom: 53%;
+                cursor: pointer;
+            }
+            .reply-btn :hover{
+                color: rgb(2, 38, 244);
+            }
+    </style>
+</head>
+<body>
+    <div class="main" id="canvasBack">
+        <div class="dropdown">
+            <button onclick="myFunction()" class="dropbtn" id="menuBtn">
+                <i class="fas fa-tree downMenu"></i>
+                <i class="fa fa-angle-double-down"></i>
+            </button>
+            <div id="myDropdown" class="dropdown-content" style="display:none;">
+              <ul style="padding-left:0vw; text-align: center;" id="myList">
+                <li id="tree_1111.glb" onclick="positionTree('./assests/img/tree_1.png','./assests/models/tree_1111.glb')">
+                    <img src="./assests/img/tree_1.png" alt="tree_1" style="width: 80%;height: 4vw;" />
+                </li>
+                <li id="tree_2.glb" onclick="positionTree('./assests/img/tree_2.png','./assests/models/tree_2.glb')">
+                    <img src="./assests/img/tree_2.png" alt="tree_2" style="width: 80%;height: 4vw;" />
+                </li>
+                <li id="tree_3.glb" onclick="positionTree('./assests/img/tree_3.png','./assests/models/tree_3.glb')">
+                    <img src="./assests/img/tree_3.png" alt="tree_3" style="width: 80%;height: 4vw;" />
+                </li>
+              </ul>
+            </div>
+        </div>
+        <!-- <button class="brush-btn" onclick="removeTree()">
+            <i class="fa fa-paint-brush"></i>
+        </button>
+        <button class="reply-btn">
+            <i class="fa fa-reply"></i>
+        </button> -->
+        <i id="point" alt="point" class="fas fa-tree point-cursor" style="display: none;" ></i>
+        <i class="fa fa-paint-brush" id="removePointer" style="display: none; font-size: xx-large; position: absolute;"></i>
+    </div>
+    <script>
+        let temp = 0;
+        let treeUrl = "";
+        let moveInfo = '';
+        let prevew = 0;
+        let touchTree = '';
+        const listItems = document.querySelectorAll('li');
+        const Btn = document.getElementById('menuBtn');
+            const myFunction = () => {
+              let dropDown = document.getElementById('myDropdown').style.display;
+                if(dropDown == 'none'){
+                    document.getElementById('myDropdown').style.display = 'block'
+                }
+                else{
+                    document.getElementById('myDropdown').style.display = 'none';
+                    treeUrl = '';
+                    document.getElementById('point').style.display = 'none';
+                    document.body.style.cursor = 'pointer';
+                }
+            }
+            Btn.addEventListener('touchend',() => {
+                touchTree = '';
+            })
+
+            const positionTree = (value,treeSource) => {
+                document.body.style.cursor = 'none';
+                document.getElementById('point').src = value;
+                document.getElementById('point').style.display = 'block';
+                temp = 1;
+                treeUrl = treeSource ? treeSource : '';
+                document.getElementById('removePointer').style.display='none';
+                moveInfo = document.getElementById('point');
+            }
+
+            const cursorPoint = (e) => {
+                let pointObject = moveInfo ? moveInfo : '';
+                if(temp == 1 && pointObject){
+                    const mouseX = e.pageX; // Mouse X position
+                    const mouseY = e.pageY; // Mouse Y position
+                    // Update the position of the point cursor
+                    const viewportWidth = window.innerWidth; 
+                    const centerX = (mouseX - (pointObject.offsetWidth / 2)) / viewportWidth * 100;
+                    const centerY = (mouseY - (pointObject.offsetHeight / 2) - 20) / viewportWidth * 100;
+
+                    pointObject.style.left = `${centerX}vw`;
+                    pointObject.style.top = `${centerY}vw`;
+                    // pointObject.style.left = `${mouseX - (pointObject.offsetWidth / 2)}vw`; // Center the cursor
+                    // pointObject.style.top = `${mouseY - (pointObject.offsetHeight / 2)-20}vw`; // 
+                }
+            }
+            window.addEventListener('mousemove',cursorPoint)
+
+            const removeTree =()=> {
+                let statePointer = document.getElementById('removePointer').style.display;
+                console.log(statePointer)
+                if(statePointer == 'none'){
+                    document.body.style.cursor = 'none';
+                    document.getElementById('point').style.display = 'none';
+                    document.getElementById('removePointer').style.display='block';
+                    temp = 1;
+                    moveInfo = document.getElementById('removePointer');
+                    prevew = 1;
+                }
+                else{
+                    console.log('pointer')
+                    document.body.style.cursor = 'pointer';
+                    document.getElementById('point').style.display = 'none';
+                    document.getElementById('removePointer').style.display='none';
+                    temp = 0;
+                    moveInfo = ''
+                    prevew = 0;
+                }
+            }
+
+            const removeTreeEvent = () => {
+                // if(preview == 1){
+                    
+                // }
+            }
+
+         
+
+            window.addEventListener('click',removeTreeEvent)
+    </script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script> -->
+     <script src="three/build/three.min.js"></script>
+    <script src="https://cdn.rawgit.com/mrdoob/three.js/r128/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://cdn.rawgit.com/mrdoob/three.js/r128/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.rawgit.com/mrdoob/three.js/r128/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://cdn.rawgit.com/mrdoob/three.js/r128/examples/js/postprocessing/RenderPass.js"></script>
+    <script src="https://cdn.rawgit.com/mrdoob/three.js/r128/examples/js/postprocessing/ShaderPass.js"></script>
+    <script src="https://cdn.rawgit.com/mrdoob/three.js/r128/examples/js/shaders/CopyShader.js"></script>
+    <script src="https://cdn.rawgit.com/mrdoob/three.js/r128/examples/js/shaders/BlurShader.js"></script>
+    <script src="https://cdn.rawgit.com/mrdoob/three.js/r128/examples/js/shaders/HorizontalBlurShader.js"></script>
+    <script src="https://cdn.rawgit.com/mrdoob/three.js/r128/examples/js/shaders/VerticalBlurShader.js"></script>
+
+    <script src="three/examples/js/objects/Water.js"></script>
+    <!-- <script src="./grassShader.js"></script> -->
+    <script type="module">
+        // Create the scen
+        const touchArea = document.getElementById('canvasBack');
+        const scene = new THREE.Scene();
+
+        scene.fog = new THREE.Fog(0x87CEEB, 0.001,800); // Set up fog
+        const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 5, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('canvasBack').appendChild(renderer.domElement);
+        renderer.setClearColor(new THREE.Color(0x87CEEB)); 
+        var light_source = new THREE.Vector3(707.07, 707.07, 700);
+        // Add Orbit Control
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.minPolarAngle = Math.PI / 6; // Limit from looking straight up
+        controls.maxPolarAngle = Math.PI / 2.2; // Limit to looking straight down
+        const grassTexture = new THREE.TextureLoader().load('./assests/img/grass.png',(texture) => {
+            texture.wrapS = THREE.RepeatWrapping; // Allows horizontal repeat
+            texture.wrapT = THREE.RepeatWrapping; // Allows vertical repeat
+            texture.repeat.set(40, 40); // Repeat the texture 4 times in X and Y directions
+        });
+        const grassMaterial = new THREE.MeshStandardMaterial({
+            map: grassTexture,
+            side : THREE.DoubleSide,
+            roughness: 1.0,  // Adjust for realism
+            metalness: 1.0,
+            displacementScale: 0.2,
+            bumpScale: 0.1,
+            // blending: THREE.AdditiveBlending
+        });
+
+        const composer = new THREE.EffectComposer(renderer);
+        const renderPass = new THREE.RenderPass(scene, camera);
+        composer.addPass(renderPass);
+
+        // Horizontal Blur
+        const hBlur = new THREE.ShaderPass(THREE.HorizontalBlurShader);
+        hBlur.uniforms['h'].value = 1 / window.innerWidth; // set horizontal blur amount
+        composer.addPass(hBlur);
+
+        // Vertical Blur
+        const vBlur = new THREE.ShaderPass(THREE.VerticalBlurShader);
+        vBlur.uniforms['v'].value = 1 / window.innerHeight; // set vertical blur amount
+        composer.addPass(vBlur);
+
+        // Final render pass
+        const finalPass = new THREE.ShaderPass(THREE.CopyShader);
+        finalPass.renderToScreen = true;
+        composer.addPass(finalPass);
+
+
+
+        console.log(THREE.REVISION)
+        const loader = new THREE.GLTFLoader();
+        const modelUrl = './assests/models/seperate.glb'; // Replace with your 3D model path
+
+        loader.load(modelUrl, function (gltf) {
+            let island = gltf.scene;
+
+            scene.add(island);
+            island.scale.set(10, 10, 10); // Scale the model if necessary
+            island.position.set(0, -23, 0);
+            
+            island.traverse(function (child) {
+            if(child.name === 'grass' && child.isMesh ) {
+                    child.material = grassMaterial;
+                    child.castShadow = true; // Cast shadows
+                    child.receiveShadow = true; // Receive shadows
+                    child.material.transparent = true;
+                }
+            else if(child.name === 'sand' && child.isMesh){
+                child.material.transparent = true;
+                child.castShadow = true;
+                child.receiveShadow = true;
+                // child.material = sandMaterial;
+            }
+            })
+
+            const box = new THREE.Box3().setFromObject(island);
+            const center = box.getCenter(new THREE.Vector3());
+
+            // Set the controls target to the center of the model
+            controls.target.copy(center);
+            controls.update(); // Important to call this after changing the target
+
+        }, undefined, function (error) {
+            console.error(error);
+        });
+
+
+        camera.position.z =400;
+        // camera.position.x = -10;
+
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+        scene.add(ambientLight);
+        const sunLight = new THREE.DirectionalLight(0xffffff, 1); // White color and intensity of 1
+
+            sunLight.position.set(30, 10, 10).normalize();; // Position the light at (x, y, z)
+
+            // Optional: Add shadow properties
+            sunLight.castShadow = true;
+            sunLight.shadow.mapSize.width = 1024; // Default shadow map size
+            sunLight.shadow.mapSize.height = 1024; // Default shadow map size
+            sunLight.shadow.camera.near = 0.5;    // Default near clipping plane
+            sunLight.shadow.camera.far = 50;      // Default far clipping plane
+            sunLight.shadow.bias = -0.01;
+            sunLight.intensity = 3,
+            scene.add(sunLight);
+
+            // Add a helper to visualize the directional light position and direction (optio
+            // Targeting the light to the target object
+            const sandPlane = new THREE.PlaneGeometry(5000,5000);
+            const sandPlaneTextureLoader = new THREE.TextureLoader();
+            const sandTexture = sandPlaneTextureLoader.load('./assests/img/sandTexture.png');
+            const planeMaterial = new THREE.MeshBasicMaterial({ map: sandTexture, side: THREE.DoubleSide });
+            const sandPlaneMesh = new THREE.Mesh(sandPlane, planeMaterial);
+            sandPlaneMesh.rotation.x = - Math.PI / 2; // Rotate the plane to be horizontal
+            sandPlaneMesh.position.y +=3;
+            scene.add(sandPlaneMesh);
+
+
+
+        const waterGeometry = new THREE.PlaneGeometry(10000, 10000);
+        let water = new THREE.Water(waterGeometry, {
+                    textureWidth: 600, // Texture resolution
+                    textureHeight: 600,
+                    waterNormals: new THREE.TextureLoader().load('./assests/img/waternormals.jpg',(texture)=>{
+                        texture.wrapS = texture.wrapT = 6000 ;
+                    }), // Normal map for water
+                    sunDirection: new THREE.Vector3(0, 1, 0),
+                    flowDirection: new THREE.Vector2(1, 1),
+                    sunColor: 0xffffff,
+                    waterColor: 0x001e0f, // Deep water color
+                    distortionScale: 1, // Wave distortion effect
+                    fog: true, // Enable fog if needed
+                    transparent : true,
+                    alpha: 0.8, // Control water opacity
+                    color: 0x001e0f,
+                    specular: 0x000000,
+                    reflectivity : 0.9
+                    });
+                    water.position.y = 6.8;
+                    water.rotation.x = - Math.PI / 2; // Make it horizontal
+                    scene.add(water);
+        
+
+                    const cubeTextureLoader = new THREE.CubeTextureLoader();
+                    const envMap = cubeTextureLoader.load([
+                    './assests/img/sky/posx.png',
+                    './assests/img/sky/negx.png',
+                    './assests/img/sky/posy.png',
+                    './assests/img/sky/negy.png',
+                    './assests/img/sky/posz.png',
+                    './assests/img/sky/negz.png',
+                    ]);
+                    scene.background = envMap;
+                    scene.environment = envMap;
+
+                    const treeLoader = new THREE.GLTFLoader();
+                    // treeUrl = './tree_2.glb';
+                    
+
+                    
+
+
+
+                    function onMouseClick(event) {
+                        const mouse = new THREE.Vector2(
+                            (event.clientX / window.innerWidth) * 2 - 1,
+                            -(event.clientY / window.innerHeight) * 2 + 1
+                        );
+                        const raycaster = new THREE.Raycaster();
+                        raycaster.setFromCamera(mouse, camera);
+
+                        // Check intersection with island
+                        const intersects = raycaster.intersectObjects(scene.children, true); // "true" for recursive check
+
+                        if (intersects.length > 0) {
+                            // Get the intersection point
+                            const intersectedObject = intersects[0].point;
+                            let objectName = intersects[0].object.name
+                            if(objectName === 'grass' && treeUrl){
+                                console.log(treeUrl)
+                                treeLoader.load(treeUrl, function (gltf) {
+                                const tree = gltf.scene;
+                                if(treeUrl != './assests/models/tree_3.glb'){
+                                    tree.scale.set(0.3, 0.3, 0.3); // Adjust size as necessary
+                                }
+                                else{
+                                    tree.scale.set(0.19,0.19,0.19)
+                                }
+                                tree.position.copy(intersectedObject); // Place tree at the intersection point
+                                // tree.position.y += 1; // Raise it slightly above the ground if needed
+                                scene.add(tree);
+
+                                }, undefined, function (error) {
+                                    console.error('Error loading tree model:', error);
+                                });   
+                            }
+                        }
+                    }
+        let raycaster = new THREE.Raycaster();
+        let touch = new THREE.Vector2();
+
+
+
+        listItems.forEach(item => {
+                // item.addEventListener('touchstart', handleTouchEvent);
+                item.addEventListener('touchend', () => {
+                    touchTree = `./assests/models/${item.id}`;
+                    console.log(touchTree)
+                });
+                // item.addEventListener('touchmove', handleTouchEvent);
+        });
+
+
+
+        const planTree = () => {
+            // event.preventDefault();
+            const touchEvent = event.changedTouches[0]; // Use the first touch point
+            touch.x = (touchEvent.clientX / window.innerWidth) * 2 - 1;
+            touch.y = - (touchEvent.clientY / window.innerHeight) * 2 + 1;
+            raycaster.setFromCamera(touch, camera);
+
+            // Calculate objects intersecting the ray
+            const intersects = raycaster.intersectObjects(scene.children, true);
+            if (intersects.length > 0) {
+                            // Get the intersection point
+                            const intersectedObject = intersects[0].point;
+                            let objectName = intersects[0].object.name;
+                            console.log(objectName)
+                            if(objectName === 'grass' && touchTree){
+                                console.log(touchTree)
+                                treeLoader.load(touchTree, function (gltf) {
+                                const tree = gltf.scene;
+                                if(touchTree != './assests/models/tree_3.glb'){
+                                    tree.scale.set(0.3, 0.3, 0.3); // Adjust size as necessary
+                                }
+                                else{
+                                    tree.scale.set(0.19,0.19,0.19)
+                                }
+                                tree.position.copy(intersectedObject); // Place tree at the intersection point
+                                // tree.position.y += 1; // Raise it slightly above the ground if needed
+                                scene.add(tree);
+
+                                }, undefined, function (error) {
+                                    console.error('Error loading tree model:', error);
+                                });   
+                            }
+            }
+        }
+
+
+        window.addEventListener('click',onMouseClick, false)
+        touchArea.addEventListener('touchend',planTree , false)
+        
+
+    
+ 
+        // Render loop
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update(); // Required if controls.enableDamping = true, or if controls.autoRotate = true
+            water.material.uniforms['time'].value += 0.009;
+            water.material.uniforms['distortionScale'].value = 0.5 * Math.sin(Date.now() * 0.001); // Dynamic wave strength
+            renderer.render(scene, camera);
+            const distance = camera.position.z;
+            scene.fog.density = THREE.MathUtils.lerp(0.0015, 0.005, distance / 400);
+        }
+        animate();
+        function setWaterOpacity(opacity) {
+            water.material.uniforms['alpha'].value = opacity; // Adjust opacity value
+        }
+
+        // Example usage: Change opacity with some logic
+        setWaterOpacity(0.9);
+        // Handle resizing
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            
+        });
+    </script>
+</body>
+</html>
