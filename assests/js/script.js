@@ -1,4 +1,4 @@
- // Create the scen
+// Create the scen
  const touchArea = document.getElementById('canvasBack');
  const scene = new THREE.Scene();
 
@@ -199,7 +199,9 @@ const rockMaterial = new THREE.MeshStandardMaterial({
                      if(objectName === 'grass' && treeUrl){
                          console.log(treeUrl)
                          treeLoader.load(treeUrl, function (gltf) {
-                         const tree = gltf.scene;
+                            const originalModel = gltf.scene;
+                            const clonedModel = originalModel.clone()
+                            const tree = clonedModel;
                          if(treeUrl != './assests/models/tree_3.glb'){
                              tree.scale.set(0.3, 0.3, 0.3); // Adjust size as necessary
                          }
@@ -243,7 +245,9 @@ const rockMaterial = new THREE.MeshStandardMaterial({
                      if(objectName === 'grass' && touchTree){
                          console.log(touchTree)
                          treeLoader.load(touchTree, function (gltf) {
-                         const tree = gltf.scene;
+                            const originalModel = gltf.scene;
+                            const clonedModel = originalModel.clone()
+                            const tree = clonedModel;
                          if(touchTree != './assests/models/tree_3.glb'){
                              tree.scale.set(0.3, 0.3, 0.3); // Adjust size as necessary
                          }
