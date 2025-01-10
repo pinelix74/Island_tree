@@ -1,4 +1,4 @@
-// Create the scen
+ // Create the scen
  const touchArea = document.getElementById('canvasBack');
  const scene = new THREE.Scene();
 
@@ -27,6 +27,7 @@
      bumpScale: 0.1,
      // blending: THREE.AdditiveBlending
  });
+
 
  const islandSandTexture = new THREE.TextureLoader().load('./assests/img/islandSandTexture.png',(texture) => {
      texture.wrapS = THREE.RepeatWrapping; // Allows horizontal repeat
@@ -58,6 +59,20 @@ const rockMaterial = new THREE.MeshStandardMaterial({
     // blending: THREE.AdditiveBlending
 });
 
+const outlineTexture = new THREE.TextureLoader().load('./assests/img/outline.png',(texture) => {
+    texture.wrapS = THREE.RepeatWrapping; // Allows horizontal repeat
+    texture.wrapT = THREE.RepeatWrapping; // Allows vertical repeat
+    texture.repeat.set(80, 80); // Repeat the texture 4 times in X and Y directions
+});
+const outlineMaterial = new THREE.MeshStandardMaterial({
+    map: outlineTexture,
+    side : THREE.DoubleSide,
+    roughness: 1.0,  // Adjust for realism
+    metalness: 1.0,
+    displacementScale: 0.2,
+    bumpScale: 0.1,
+    // blending: THREE.AdditiveBlending
+});
 
 
  const composer = new THREE.EffectComposer(renderer);
@@ -80,14 +95,14 @@ const rockMaterial = new THREE.MeshStandardMaterial({
  composer.addPass(finalPass);
  console.log(THREE.REVISION)
  const loader = new THREE.GLTFLoader();
- const modelUrl = './assests/models/island(correct).glb'; // Replace with your 3D model path
+ const modelUrl = './assests/models/island(wide).glb'; // Replace with your 3D model path
  loader.load(modelUrl, function (gltf) {
      let island = gltf.scene;
      scene.add(island);
-     island.scale.set(10, 10, 10); // Scale the model if necessary
-     island.position.set(0, -23, 0);
+     island.scale.set(500, 500, 500); // Scale the model if necessary
+     island.position.set(0, -8.3, 0);
      island.traverse(function (child) {
-        
+        console.log(child.name)
      if(child.name === 'grass' && child.isMesh ) {
              child.material = grassMaterial;
              child.castShadow = true; // Cast shadows
@@ -103,6 +118,9 @@ const rockMaterial = new THREE.MeshStandardMaterial({
      else if(child.name === 'rock' && child.isMesh){
         child.material = rockMaterial;
      }
+     else if(child.name === 'outline_grass' && child.isMesh){
+        child.material = outlineMaterial
+     }
      })
      const box = new THREE.Box3().setFromObject(island);
      const center = box.getCenter(new THREE.Vector3());
@@ -114,7 +132,7 @@ const rockMaterial = new THREE.MeshStandardMaterial({
  }, undefined, function (error) {
      console.error(error);
  });
- camera.position.z =400;
+ camera.position.z =200;
  // camera.position.x = -10;
  // Lighting
  const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
@@ -160,7 +178,7 @@ const rockMaterial = new THREE.MeshStandardMaterial({
              // specular: 0x000000,
              reflectivity : 0.1
              });
-             water.position.y = 6.8;
+             water.position.y = 6.55;
              water.rotation.x = - Math.PI / 2; // Make it horizontal
              scene.add(water);
  
@@ -182,6 +200,7 @@ const rockMaterial = new THREE.MeshStandardMaterial({
              
              console.log(scene.environment)
              function onMouseClick(event) {
+                let tree;
                  const mouse = new THREE.Vector2(
                      (event.clientX / window.innerWidth) * 2 - 1,
                      -(event.clientY / window.innerHeight) * 2 + 1
@@ -197,11 +216,12 @@ const rockMaterial = new THREE.MeshStandardMaterial({
                      const intersectedObject = intersects[0].point;
                      let objectName = intersects[0].object.name
                      if(objectName === 'grass' && treeUrl){
-                         console.log(treeUrl)
+                        
+                        console.log(tree)
                          treeLoader.load(treeUrl, function (gltf) {
                             const originalModel = gltf.scene;
                             const clonedModel = originalModel.clone()
-                            const tree = clonedModel;
+                            tree = clonedModel;
                          if(treeUrl != './assests/models/tree_3.glb'){
                              tree.scale.set(0.3, 0.3, 0.3); // Adjust size as necessary
                          }
@@ -209,9 +229,7 @@ const rockMaterial = new THREE.MeshStandardMaterial({
                              tree.scale.set(0.19,0.19,0.19)
                          }
                          tree.position.copy(intersectedObject); // Place tree at the intersection point
-                         // tree.position.y += 1; // Raise it slightly above the ground if needed
                          scene.add(tree);
-
                          }, undefined, function (error) {
                              console.error('Error loading tree model:', error);
                          });   
@@ -229,6 +247,7 @@ const rockMaterial = new THREE.MeshStandardMaterial({
          // item.addEventListener('touchmove', handleTouchEvent);
  });
  const planTree = () => {
+    let tree ;
      // event.preventDefault();
      const touchEvent = event.changedTouches[0]; // Use the first touch point
      touch.x = (touchEvent.clientX / window.innerWidth) * 2 - 1;
@@ -247,7 +266,7 @@ const rockMaterial = new THREE.MeshStandardMaterial({
                          treeLoader.load(touchTree, function (gltf) {
                             const originalModel = gltf.scene;
                             const clonedModel = originalModel.clone()
-                            const tree = clonedModel;
+                            tree = clonedModel;
                          if(touchTree != './assests/models/tree_3.glb'){
                              tree.scale.set(0.3, 0.3, 0.3); // Adjust size as necessary
                          }
@@ -277,6 +296,7 @@ const rockMaterial = new THREE.MeshStandardMaterial({
      scene.fog.density = THREE.MathUtils.lerp(0.0015, 0.005, distance / 400);
  }
  animate();
+
  function setWaterOpacity(opacity) {
      water.material.uniforms['alpha'].value = opacity; // Adjust opacity value
  }
