@@ -214,6 +214,8 @@ const outlineMaterial = new THREE.MeshStandardMaterial({
                  if (intersects.length > 0) {
                      // Get the intersection point
                      const intersectedObject = intersects[0].point;
+                     console.log(intersectedObject.y)
+                     intersectedObject.y +=0.5
                      let objectName = intersects[0].object.name
                      if(objectName === 'grass' && treeUrl){
                         
@@ -223,7 +225,7 @@ const outlineMaterial = new THREE.MeshStandardMaterial({
                             const clonedModel = originalModel.clone()
                             tree = clonedModel;
                          if(treeUrl != './assests/models/tree_3.glb'){
-                             tree.scale.set(0.3, 0.3, 0.3); // Adjust size as necessary
+                             tree.scale.set(0.05, 0.05, 0.05); // Adjust size as necessary
                          }
                          else{
                              tree.scale.set(0.19,0.19,0.19)
@@ -259,6 +261,7 @@ const outlineMaterial = new THREE.MeshStandardMaterial({
      if (intersects.length > 0) {
                      // Get the intersection point
                      const intersectedObject = intersects[0].point;
+                     intersectedObject.y +=0.5
                      let objectName = intersects[0].object.name;
                      console.log(objectName)
                      if(objectName === 'grass' && touchTree){
@@ -268,10 +271,10 @@ const outlineMaterial = new THREE.MeshStandardMaterial({
                             const clonedModel = originalModel.clone()
                             tree = clonedModel;
                          if(touchTree != './assests/models/tree_3.glb'){
-                             tree.scale.set(0.3, 0.3, 0.3); // Adjust size as necessary
+                             tree.scale.set(0.05, 0.05, 0.05); // Adjust size as necessary
                          }
                          else{
-                             tree.scale.set(0.13,0.13,0.13)
+                             tree.scale.set(0.1,0.1,0.1)
                          }
                          tree.position.copy(intersectedObject); // Place tree at the intersection point
                          // tree.position.y += 1; // Raise it slightly above the ground if needed
