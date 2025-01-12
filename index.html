@@ -1,14 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Model Viewer</title>
+    <title>ISLAND</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
-        body { margin: 0; max-width: 1920px;}
-        canvas { display: block; }
-        .main{
+        body {
+            margin: 0;
+            max-width: 1920px;
+        }
+
+        canvas {
+            display: block;
+        }
+
+        .main {
             width: 100vw;
             position: relative;
             text-align: right;
@@ -17,6 +25,7 @@
             gap: 10px;
             /* height: 49vw; */
         }
+
         .dropbtn {
             background-color: hsl(210, 4%, 10%);
             color: white;
@@ -29,75 +38,91 @@
             display: flex;
             align-items: center;
             gap: 2.5vw;
-            }
+        }
 
-            .dropbtn:hover, .dropbtn:focus {
+        .dropbtn:hover,
+        .dropbtn:focus {
             background-color: #e2e9ed;
             color: black;
-            }
+        }
 
-            .dropdown {
+        .dropdown {
             position: absolute;
             display: inline-block;
             right: 2vw;
             bottom: 65%;
-            }
+        }
 
-            .dropdown-content {
+        .dropdown-content {
             position: absolute;
             background-color: #f1f1f1;
             width: 6vw;
             overflow: auto;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
             z-index: 1;
-            }
+        }
 
-            .dropdown-content a {
+        .dropdown-content a {
             color: black;
             padding: 12px 16px;
             text-decoration: none;
             display: block;
-            }
+        }
 
-            .dropdown a:hover {background-color: #ddd;}
-            .downMenu{
-                font-size: xx-large;
-                color: green;
-            }
-            .show {display: block;}
-            li{cursor: pointer;}
-            .point-cursor{
-                position: absolute;
-                font-size: xx-large;
-                color: rgb(15, 61, 15);
-                pointer-events: none;
-            }
-            .brush-btn{
-                border-radius: 50%;
-                border: none;
-                font-size: xx-large;
-                position: absolute;
-                right: 2%;
-                bottom: 59%;
-                cursor: pointer;
-            }
-            .brush-btn :hover{
-                color: rgb(249, 1, 1);
-            }
-            .reply-btn{
-                border-radius: 50%;
-                border: none;
-                font-size: xx-large;
-                position: absolute;
-                right: 2%;
-                bottom: 53%;
-                cursor: pointer;
-            }
-            .reply-btn :hover{
-                color: rgb(2, 38, 244);
-            }
+        .dropdown a:hover {
+            background-color: #ddd;
+        }
+
+        .downMenu {
+            font-size: xx-large;
+            color: green;
+        }
+
+        .show {
+            display: block;
+        }
+
+        li {
+            cursor: pointer;
+        }
+
+        .point-cursor {
+            position: absolute;
+            font-size: xx-large;
+            color: rgb(15, 61, 15);
+            pointer-events: none;
+        }
+
+        .brush-btn {
+            border-radius: 50%;
+            border: none;
+            font-size: xx-large;
+            position: absolute;
+            right: 2%;
+            bottom: 59%;
+            cursor: pointer;
+        }
+
+        .brush-btn :hover {
+            color: rgb(249, 1, 1);
+        }
+
+        .reply-btn {
+            border-radius: 50%;
+            border: none;
+            font-size: xx-large;
+            position: absolute;
+            right: 2%;
+            bottom: 53%;
+            cursor: pointer;
+        }
+
+        .reply-btn :hover {
+            color: rgb(2, 38, 244);
+        }
     </style>
 </head>
+
 <body>
     <div class="main" id="canvasBack">
         <div class="dropdown">
@@ -106,17 +131,18 @@
                 <i class="fa fa-angle-double-down"></i>
             </button>
             <div id="myDropdown" class="dropdown-content" style="display:none;">
-              <ul style="padding-left:0vw; text-align: center;" id="myList">
-                <li id="tree_1111.glb" onclick="positionTree('./assests/img/tree_1.png','./assests/models/tree.glb')">
-                    <img src="./assests/img/tree_1.png" alt="tree_1" style="width: 80%;height: 4vw;" />
-                </li>
-                <!-- <li id="tree_2.glb" onclick="positionTree('./assests/img/tree_2.png','./assests/models/tree_2.glb')">
+                <ul style="padding-left:0vw; text-align: center;" id="myList">
+                    <li id="tree_1111.glb"
+                        onclick="positionTree('./assests/img/tree_1.png','./assests/models/tree.glb')">
+                        <img src="./assests/img/tree_1.png" alt="tree_1" style="width: 80%;height: 4vw;" />
+                    </li>
+                    <!-- <li id="tree_2.glb" onclick="positionTree('./assests/img/tree_2.png','./assests/models/tree_2.glb')">
                     <img src="./assests/img/tree_2.png" alt="tree_2" style="width: 80%;height: 4vw;" />
                 </li>
                 <li id="tree_3.glb" onclick="positionTree('./assests/img/tree_3.png','./assests/models/tree_3.glb')">
                     <img src="./assests/img/tree_3.png" alt="tree_3" style="width: 80%;height: 4vw;" />
                 </li> -->
-              </ul>
+                </ul>
             </div>
         </div>
         <!-- <button class="brush-btn" onclick="removeTree()">
@@ -125,95 +151,128 @@
         <button class="reply-btn">
             <i class="fa fa-reply"></i>
         </button> -->
-        <i id="point" alt="point" class="fas fa-tree point-cursor" style="display: none;" ></i>
-        <i class="fa fa-paint-brush" id="removePointer" style="display: none; font-size: xx-large; position: absolute;"></i>
+        <i id="point" alt="point" class="fas fa-tree point-cursor" style="display: none;"></i>
+        <i class="fa fa-paint-brush" id="removePointer"
+            style="display: none; font-size: xx-large; position: absolute;"></i>
     </div>
     <script>
+
         let temp = 0;
         let treeUrl = "";
+
         let moveInfo = '';
         let prevew = 0;
+
         let touchTree = '';
         const listItems = document.querySelectorAll('li');
         const Btn = document.getElementById('menuBtn');
-            const myFunction = () => {
-              let dropDown = document.getElementById('myDropdown').style.display;
-                if(dropDown == 'none'){
-                    document.getElementById('myDropdown').style.display = 'block'
-                }
-                else{
-                    document.getElementById('myDropdown').style.display = 'none';
-                    treeUrl = '';
-                    document.getElementById('point').style.display = 'none';
-                    document.body.style.cursor = 'pointer';
-                }
-            }
-            Btn.addEventListener('touchend',() => {
-                touchTree = '';
-            })
 
-            const positionTree = (value,treeSource) => {
+        const myFunction = () => 
+        {
+            let dropDown = document.getElementById('myDropdown').style.display;
+
+            if (dropDown == 'none')
+            {
+                document.getElementById('myDropdown').style.display = 'block';
+            }
+            else 
+            {
+                document.getElementById('myDropdown').style.display = 'none';
+                treeUrl = '';
+
+                document.getElementById('point').style.display = 'none';
+                document.body.style.cursor = 'pointer';
+
+            }
+        }
+
+        Btn.addEventListener('touchend', () => 
+        {
+            touchTree = '';
+        })
+
+        const positionTree = (value, treeSource) => 
+        {
+            document.body.style.cursor = 'none';
+            document.getElementById('point').src = value;
+
+            document.getElementById('point').style.display = 'block';
+            temp = 1;
+
+            treeUrl = treeSource ? treeSource : '';
+            document.getElementById('removePointer').style.display = 'none';
+            moveInfo = document.getElementById('point');
+
+        }
+
+        const cursorPoint = (e) => 
+        {
+            let pointObject = moveInfo ? moveInfo : '';
+
+            if (temp == 1 && pointObject) 
+            {
+                const mouseX = e.pageX; // Mouse X position
+                const mouseY = e.pageY; // Mouse Y position
+
+                // Update the position of the point cursor
+                const viewportWidth = window.innerWidth;
+                const centerX = (mouseX - (pointObject.offsetWidth / 2)) / viewportWidth * 100;
+                const centerY = (mouseY - (pointObject.offsetHeight / 2) - 20) / viewportWidth * 100;
+
+                pointObject.style.left = `${centerX}vw`;
+                pointObject.style.top = `${centerY}vw`;
+            }
+
+        };
+
+        window.addEventListener('mousemove', cursorPoint);
+
+        const removeTree = () => 
+        {
+            let statePointer = document.getElementById('removePointer').style.display;
+            console.log(statePointer);
+
+            if (statePointer == 'none') 
+            {
                 document.body.style.cursor = 'none';
-                document.getElementById('point').src = value;
-                document.getElementById('point').style.display = 'block';
+                document.getElementById('point').style.display = 'none';
+
+                document.getElementById('removePointer').style.display = 'block';
+
                 temp = 1;
-                treeUrl = treeSource ? treeSource : '';
-                document.getElementById('removePointer').style.display='none';
-                moveInfo = document.getElementById('point');
+                moveInfo = document.getElementById('removePointer');
+
+                prevew = 1;
+            }
+            else 
+            {
+                console.log('pointer')
+                document.body.style.cursor = 'pointer';
+
+                document.getElementById('point').style.display = 'none';
+                document.getElementById('removePointer').style.display = 'none';
+
+                temp = 0;
+                moveInfo = '';
+
+                prevew = 0;
             }
 
-            const cursorPoint = (e) => {
-                let pointObject = moveInfo ? moveInfo : '';
-                if(temp == 1 && pointObject){
-                    const mouseX = e.pageX; // Mouse X position
-                    const mouseY = e.pageY; // Mouse Y position
-                    // Update the position of the point cursor
-                    const viewportWidth = window.innerWidth; 
-                    const centerX = (mouseX - (pointObject.offsetWidth / 2)) / viewportWidth * 100;
-                    const centerY = (mouseY - (pointObject.offsetHeight / 2) - 20) / viewportWidth * 100;
+        }
 
-                    pointObject.style.left = `${centerX}vw`;
-                    pointObject.style.top = `${centerY}vw`;
-                    // pointObject.style.left = `${mouseX - (pointObject.offsetWidth / 2)}vw`; // Center the cursor
-                    // pointObject.style.top = `${mouseY - (pointObject.offsetHeight / 2)-20}vw`; // 
-                }
-            }
-            window.addEventListener('mousemove',cursorPoint)
+        const removeTreeEvent = () => 
+        {
+            // if(preview == 1){
 
-            const removeTree =()=> {
-                let statePointer = document.getElementById('removePointer').style.display;
-                console.log(statePointer)
-                if(statePointer == 'none'){
-                    document.body.style.cursor = 'none';
-                    document.getElementById('point').style.display = 'none';
-                    document.getElementById('removePointer').style.display='block';
-                    temp = 1;
-                    moveInfo = document.getElementById('removePointer');
-                    prevew = 1;
-                }
-                else{
-                    console.log('pointer')
-                    document.body.style.cursor = 'pointer';
-                    document.getElementById('point').style.display = 'none';
-                    document.getElementById('removePointer').style.display='none';
-                    temp = 0;
-                    moveInfo = ''
-                    prevew = 0;
-                }
-            }
+            // }
+        }
 
-            const removeTreeEvent = () => {
-                // if(preview == 1){
-                    
-                // }
-            }
 
-         
 
-            window.addEventListener('click',removeTreeEvent)
+        window.addEventListener('click', removeTreeEvent)
     </script>
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script> -->
-     <script src="three/build/three.min.js"></script>
+    <script src="three/build/three.min.js"></script>
     <script src="https://cdn.rawgit.com/mrdoob/three.js/r128/examples/js/loaders/GLTFLoader.js"></script>
     <script src="https://cdn.rawgit.com/mrdoob/three.js/r128/examples/js/controls/OrbitControls.js"></script>
     <script src="https://cdn.rawgit.com/mrdoob/three.js/r128/examples/js/postprocessing/EffectComposer.js"></script>
@@ -223,9 +282,9 @@
     <script src="https://cdn.rawgit.com/mrdoob/three.js/r128/examples/js/shaders/BlurShader.js"></script>
     <script src="https://cdn.rawgit.com/mrdoob/three.js/r128/examples/js/shaders/HorizontalBlurShader.js"></script>
     <script src="https://cdn.rawgit.com/mrdoob/three.js/r128/examples/js/shaders/VerticalBlurShader.js"></script>
-
     <script src="three/examples/js/objects/Water.js"></script>
     <!-- <script src="./grassShader.js"></script> -->
     <script src="./assests/js/script.js"></script>
 </body>
+
 </html>
