@@ -137,7 +137,7 @@ const modelUrl = './assests/models/island(wide).glb'; // Replace with your 3D mo
       });
 
 
-      camera.position.z = 200;
+      camera.position.z = 60;
 
 
 // Lighting
@@ -193,9 +193,9 @@ let water = new THREE.Water(waterGeometry,
         fog: true, // Enable fog if needed
 
         transparent: true,
-        // alpha: 0.8, // Control water opacity
+        alpha: 1, // Control water opacity
         color: '#145d55',
-        // reflectivity: 0.1
+        reflectivity: 3
     });
 
     water.position.y = 6.55;
