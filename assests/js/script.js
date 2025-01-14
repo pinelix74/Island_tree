@@ -145,7 +145,7 @@ const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
 const sunLight = new THREE.DirectionalLight(0xffffff, 1); 
 
       scene.add(ambientLight);
-      sunLight.position.set(30, 10, 10).normalize(); // Position the light at (x, y, z)
+      sunLight.position.set(80, 10, 10).normalize(); // Position the light at (x, y, z)
 
       sunLight.castShadow = true;
       sunLight.shadow.mapSize.width = 1024; // Default shadow map size
@@ -216,7 +216,6 @@ const envMap = cubeTextureLoader.load
 
       scene.background = envMap;
       scene.environment = envMap;
-
 
 
 // treePlan
