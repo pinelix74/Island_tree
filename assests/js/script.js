@@ -154,13 +154,16 @@ sunLight.intensity = 3,
 const sandPlane = new THREE.PlaneGeometry(5000, 5000);
 const sandPlaneTextureLoader = new THREE.TextureLoader();
 
-const sandTexture = sandPlaneTextureLoader.load('./assests/img/sandTexture.png');
-const planeMaterial = new THREE.MeshBasicMaterial({ map: sandTexture, side: THREE.DoubleSide });
-const sandPlaneMesh = new THREE.Mesh(sandPlane, planeMaterial);
-
-sandPlaneMesh.rotation.x = - Math.PI / 2; // Rotate the plane to be horizontal
-sandPlaneMesh.position.y += 3;
-scene.add(sandPlaneMesh);
+sandPlaneTextureLoader.load('./assests/img/sandTexture.png',(texture) => 
+{
+    texture.repeat.set(100,100)
+    const planeMaterial = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide });
+    const sandPlaneMesh = new THREE.Mesh(sandPlane, planeMaterial);
+    
+    sandPlaneMesh.rotation.x = - Math.PI / 2; // Rotate the plane to be horizontal
+    sandPlaneMesh.position.y += 6.5;
+    scene.add(sandPlaneMesh);
+});
 
 // Water
 const waterGeometry = new THREE.PlaneGeometry(10000, 10000);
@@ -177,7 +180,7 @@ let water = new THREE.Water(waterGeometry,
         flowDirection: new THREE.Vector2(1, 1),
 
         sunColor: 0x006400,
-        waterColor: '#458040', // Deep water color
+        waterColor: '#ffffff', // Deep water color
 
         // distortionScale: 1, // Wave distortion effect
         fog: true, // Enable fog if needed
@@ -191,9 +194,33 @@ water.position.y = 6.55;
 water.rotation.x = - Math.PI / 2; // Make it horizontal
 scene.add(water);
 
-// skybox
-const textureLoader = new THREE.TextureLoader();
-textureLoader.load('./assests/img/sky/kkk.png', (texture) => {
+// // skybox
+const canvas = document.createElement('canvas');
+const ctx = canvas.getContext('2d');
+
+const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+gradient.addColorStop(0.4, '#0b78fb');  // Light Sky Blue
+gradient.addColorStop(0.5, '#ffffff');  // Steel Blue
+ctx.fillStyle = gradient;
+ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+const cloudImage = new Image();
+cloudImage.src = './assests/img/sky/cloud.png';
+
+cloudImage.onload = () => {
+    // Draw the cloud texture on top of the gradient
+    ctx.globalAlpha = 0.5; // Adjust the opacity of the clouds
+    ctx.drawImage(cloudImage, 0, 0, 500, canvas.height + 190);
+    ctx.drawImage(cloudImage, -40, 0, 500, canvas.height + 190);
+    ctx.drawImage(cloudImage, -80, 0, 500, canvas.height + 190);
+    ctx.drawImage(cloudImage, -120, 0, 500, canvas.height + 190);
+    ctx.drawImage(cloudImage, -160, 0, 500, canvas.height + 190);
+    ctx.drawImage(cloudImage, -200, 0, 500, canvas.height + 190);
+    // ctx.drawImage(cloudImage, -240, 0, 500, canvas.height + 180);
+
+    const texture = new THREE.Texture(canvas);
+    texture.needsUpdate = true;
+
     const sphereGeometry = new THREE.SphereGeometry(1000, 60, 40);
     const sphereMaterial = new THREE.MeshBasicMaterial({
         map: texture,
@@ -201,7 +228,10 @@ textureLoader.load('./assests/img/sky/kkk.png', (texture) => {
     });
     const skySphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
     scene.add(skySphere);
-});
+    
+};
+    // Create texture from canvas
+
 
 // scene.background = envMap;
 // scene.environment = envMap;

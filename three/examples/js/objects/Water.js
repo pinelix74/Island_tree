@@ -184,7 +184,7 @@
 					vec3 scatter = max( 0.0, dot( surfaceNormal, eyeDirection ) ) * waterColor;
 					vec3 albedo = mix( ( sunColor * diffuseLight * 0.3 + scatter ) * getShadowMask(), ( vec3( 0.1 ) + reflectionSample * 0.9 + reflectionSample * specularLight ), reflectance);
 					vec3 outgoingLight = albedo;
-					gl_FragColor = vec4( outgoingLight, 0.9 );
+					gl_FragColor = vec4( outgoingLight, 0.5 );
 
 					#include <tonemapping_fragment>
 					#include <fog_fragment>
