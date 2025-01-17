@@ -14,6 +14,10 @@ renderer.setClearColor(new THREE.Color(0x87CEEB));
 // Add Orbit Control
 controls.minPolarAngle = Math.PI / 6; // Limit from looking straight up
 controls.maxPolarAngle = Math.PI / 2.2; // Limit to looking straight down
+controls.enablePan = false;
+controls.maxDistance = 170;
+controls.minDistance = 40;
+
 
 // grassTexture
 const grassTexture = new THREE.TextureLoader().load('./assests/img/grass.png', (texture) => {
@@ -199,8 +203,8 @@ const canvas = document.createElement('canvas');
 const ctx = canvas.getContext('2d');
 
 const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-gradient.addColorStop(0.4, '#0b78fb');  // Light Sky Blue
-gradient.addColorStop(0.5, '#ffffff');  // Steel Blue
+gradient.addColorStop(0.4, '#0082e0');  // Light Sky Blue
+gradient.addColorStop(0.52, '#f8fdff');  // Steel Blue
 ctx.fillStyle = gradient;
 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -216,7 +220,6 @@ cloudImage.onload = () => {
     ctx.drawImage(cloudImage, -120, 0, 500, canvas.height + 190);
     ctx.drawImage(cloudImage, -160, 0, 500, canvas.height + 190);
     ctx.drawImage(cloudImage, -200, 0, 500, canvas.height + 190);
-    // ctx.drawImage(cloudImage, -240, 0, 500, canvas.height + 180);
 
     const texture = new THREE.Texture(canvas);
     texture.needsUpdate = true;
