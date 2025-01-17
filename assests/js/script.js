@@ -14,9 +14,6 @@ renderer.setClearColor(new THREE.Color(0x87CEEB));
 // Add Orbit Control
 controls.minPolarAngle = Math.PI / 6; // Limit from looking straight up
 controls.maxPolarAngle = Math.PI / 2.2; // Limit to looking straight down
-controls.enablePan = false;
-controls.maxDistance = 170;
-controls.minDistance = 40;
 
 // grassTexture
 const grassTexture = new THREE.TextureLoader().load('./assests/img/grass.png', (texture) => {
