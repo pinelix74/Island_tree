@@ -27,9 +27,9 @@
         }
 
         .dropbtn {
-            background-color: hsl(210, 4%, 10%);
-            color: white;
-            padding: 1vw;
+            background-color: hsl(0, 0%, 100%);
+            color: rgb(21, 20, 20);
+            padding: 0.5vw;
             font-size: 1vw;
             border: none;
             cursor: pointer;
@@ -37,13 +37,12 @@
             transition: 1s;
             display: flex;
             align-items: center;
-            gap: 2.5vw;
+            gap: 2vw;
         }
 
         .dropbtn:hover,
         .dropbtn:focus {
-            background-color: #e2e9ed;
-            color: black;
+            color: rgb(0, 0, 0);
         }
 
         .dropdown {
@@ -56,7 +55,7 @@
         .dropdown-content {
             position: absolute;
             background-color: #f1f1f1;
-            width: 6vw;
+            width: 5vw;
             overflow: auto;
             box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
             z-index: 1;
@@ -127,30 +126,18 @@
     <div class="main" id="canvasBack">
         <div class="dropdown">
             <button onclick="myFunction()" class="dropbtn" id="menuBtn">
-                <i class="fas fa-tree downMenu"></i>
+                <img src="./assests/img/mangroveTree.png" alt="mangroveTree" style="width: 30px; height: 40px;" />
                 <i class="fa fa-angle-double-down"></i>
             </button>
             <div id="myDropdown" class="dropdown-content" style="display:none;">
                 <ul style="padding-left:0vw; text-align: center;" id="myList">
                     <li id="tree_1111.glb"
-                        onclick="positionTree('./assests/img/tree_1.png','./assests/models/tree.glb')">
-                        <img src="./assests/img/tree_1.png" alt="tree_1" style="width: 80%;height: 4vw;" />
+                        onclick="positionTree('./assests/img/mangroveTree.png','./assests/models/tree.glb')">
+                        <img src="./assests/img/treeMenu.png" alt="tree_1" style="width: 80%;height: 4vw;" />
                     </li>
-                    <!-- <li id="tree_2.glb" onclick="positionTree('./assests/img/tree_2.png','./assests/models/tree_2.glb')">
-                    <img src="./assests/img/tree_2.png" alt="tree_2" style="width: 80%;height: 4vw;" />
-                </li>
-                <li id="tree_3.glb" onclick="positionTree('./assests/img/tree_3.png','./assests/models/tree_3.glb')">
-                    <img src="./assests/img/tree_3.png" alt="tree_3" style="width: 80%;height: 4vw;" />
-                </li> -->
                 </ul>
             </div>
         </div>
-        <!-- <button class="brush-btn" onclick="removeTree()">
-            <i class="fa fa-paint-brush"></i>
-        </button>
-        <button class="reply-btn">
-            <i class="fa fa-reply"></i>
-        </button> -->
         <i id="point" alt="point" class="fas fa-tree point-cursor" style="display: none;"></i>
         <i class="fa fa-paint-brush" id="removePointer"
             style="display: none; font-size: xx-large; position: absolute;"></i>

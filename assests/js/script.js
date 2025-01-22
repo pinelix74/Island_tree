@@ -104,18 +104,18 @@ loader.load(modelUrl, function (gltf) {
 
     island.traverse(function (child) {
 
-        if (child.name === 'grass' && child.isMesh) {
+        if (child.name === 'grass'  && child.isMesh) {
             child.material = grassMaterial;
             child.castShadow = true; // Cast shadows
             child.receiveShadow = true; // Receive shadows
             child.material.transparent = true;
         }
-        else if (child.name === 'sand' && child.isMesh) {
+        else if (child.name === 'sand' || child.name === 'sand_1' || child.name === 'sand_2' || child.name === 'sand_3'  && child.isMesh) {
             child.material = islandSandMaterial;
             child.castShadow = true;
             child.receiveShadow = true;
         }
-        else if (child.name === 'rock' && child.isMesh) {
+        else if (child.name === 'rock' || child.name === 'rock_1' || child.name === 'rock_2' || child.name === 'rock_3' && child.isMesh) {
             child.material = rockMaterial;
         }
 
@@ -256,20 +256,18 @@ function onMouseClick(event) {
 
     // Check intersection with island
     const intersects = raycaster.intersectObjects(scene.children, true); // "true" for recursive check
-
     if (intersects.length > 0) {
         // Get the intersection point
         let intersectedObject = intersects[0].point;
         let objectName = intersects[0].object.name;
-        intersectedObject.y += 0.5;
-
+        intersectedObject.y += 1.4;
         if (objectName === 'grass' && treeUrl) {
             if (!originalModel) {
                 treeLoader.load(treeUrl, function (gltf) {
                     originalModel = gltf.scene;
                     tree = originalModel;
 
-                    tree.scale.set(0.05, 0.05, 0.05); // Adjust size as necessary
+                    tree.scale.set(0.15, 0.15, 0.15); // Adjust size as necessary
                     tree.position.copy(intersectedObject); // Place tree at the intersection poin
                     scene.add(tree);
                 },
@@ -279,7 +277,7 @@ function onMouseClick(event) {
             }
             else {
                 var tree = originalModel.clone();
-                tree.scale.set(0.05, 0.05, 0.05); // Adjust size as necessary
+                tree.scale.set(0.15, 0.15, 0.15); // Adjust size as necessary
                 tree.position.copy(intersectedObject);
                 scene.add(tree);
             }
@@ -310,7 +308,7 @@ const planTree = () => {
 
     if (intersects.length > 0) {
         const intersectedObject = intersects[0].point;
-        intersectedObject.y += 0.5
+        intersectedObject.y += 1.4
         let objectName = intersects[0].object.name;
 
         if (objectName === 'grass' && touchTree) {
@@ -321,7 +319,7 @@ const planTree = () => {
                 tree = clonedModel;
 
                 if (touchTree != './assests/models/tree_3.glb') {
-                    tree.scale.set(0.05, 0.05, 0.05);
+                    tree.scale.set(0.15, 0.15, 0.15);
                 }
                 else {
                     tree.scale.set(0.1, 0.1, 0.1);
